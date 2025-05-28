@@ -1,7 +1,3 @@
-Okay! Para criar um arquivo `README.md` abrangente para o seu projeto, vou detalhar cada seção, considerando que você separou o código em arquivos HTML, CSS e JavaScript.
-
----
-
 # Gerador de Personagens Dragon Ball
 
 Este projeto é um aplicativo web que permite gerar personagens no estilo Dragon Ball. Ele oferece duas formas principais de geração: um personagem aleatório ou um personagem baseado em uma imagem que o usuário faz upload. A descrição da imagem é processada por um modelo de inteligência artificial (Gemini-2.0-flash) e, em seguida, essa descrição é usada por outro modelo de IA (Imagen-3.0-generate-002) para criar o personagem visual.
