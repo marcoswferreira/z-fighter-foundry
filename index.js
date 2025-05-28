@@ -1,14 +1,38 @@
-
 let lastImageDescription = null; // Variável para armazenar a última descrição da imagem
+const API_KEY = ""; // Mantenha vazio se estiver no Canvas, ou cole sua chave de API aqui para GitHub Pages
 
 document.addEventListener('DOMContentLoaded', () => {
     const generateRandomButton = document.getElementById('generateRandomButton');
     const imageUpload = document.getElementById('imageUpload');
     const regenerateFromUploadButton = document.getElementById('regenerateFromUploadButton');
+    const apiWarning = document.getElementById('apiWarning');
     const imageDisplay = document.getElementById('imageDisplay');
     const loadingIndicator = document.getElementById('loadingIndicator');
     const generatedImage = document.getElementById('generatedImage');
     const errorMessage = document.getElementById('errorMessage');
+
+    // Função para desabilitar todos os botões e o input de arquivo
+    function disableAllButtons(disabled) {
+        generateRandomButton.disabled = disabled;
+        imageUpload.disabled = disabled;
+        document.querySelector('label[for="imageUpload"]').style.pointerEvents = disabled ? 'none' : 'auto';
+        document.querySelector('label[for="imageUpload"]').style.opacity = disabled ? '0.6' : '1';
+        regenerateFromUploadButton.disabled = disabled;
+    }
+
+    // Validação inicial da API Key
+    // Se estiver no Canvas, a chave deve ser injetada. Se estiver vazia, assumimos que não foi configurada.
+    // Para GitHub Pages, você DEVE colar sua chave de API na variável API_KEY acima.
+    if (!API_KEY && window.location.hostname.includes('github.io')) { // Verifica se está em GitHub Pages e API_KEY está vazia
+        apiWarning.style.display = 'block';
+        showError("Aviso: Chave de API não configurada. O gerador não funcionará no GitHub Pages sem ela.");
+        disableAllButtons(true);
+    } else if (!API_KEY) { // Se não está no GitHub Pages, assume que o Canvas vai injetar
+        // Mensagem para ambiente Canvas onde a chave é injetada em runtime
+        // Não precisa de aviso se a expectativa é que o ambiente forneça a chave
+        console.log("A chave de API está vazia no código, presumindo que será fornecida pelo ambiente (ex: Canvas).");
+    }
+
 
     // Função para mostrar o estado de carregamento
     function showLoading(message = "Gerando personagem...") {
@@ -55,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 ],
             };
-            const apiKey = ""; // Insira sua chave de API aqui
+            const apiKey = API_KEY; // Usa a chave de API definida globalmente
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             const response = await fetch(apiUrl, {
@@ -68,7 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error(`Erro HTTP: ${response.status} - ${response.statusText}`, errorText);
-                throw new Error(`Erro na API de descrição da imagem: ${response.statusText || 'Resposta inválida'}. Detalhes: ${errorText.substring(0, 200)}...`);
+                if (response.status === 401) {
+                    throw new Error(`Não autorizado (401). Verifique se sua chave de API está configurada corretamente.`);
+                } else {
+                    throw new Error(`Erro na API de descrição da imagem: ${response.statusText || 'Resposta inválida'}. Detalhes: ${errorText.substring(0, 200)}...`);
+                }
             }
 
             const result = await response.json();
@@ -93,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const finalPrompt = `Personagem estilo DragonBall, ${basePrompt}, estilo anime, alta qualidade, detalhado.`;
             const payload = { instances: { prompt: finalPrompt }, parameters: { "sampleCount": 1 } };
-            const apiKey = "";
+            const apiKey = API_KEY; // Usa a chave de API definida globalmente
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
 
             const response = await fetch(apiUrl, {
@@ -106,7 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error(`Erro HTTP: ${response.status} - ${response.statusText}`, errorText);
-                throw new Error(`Erro na API de geração de imagem: ${response.statusText || 'Resposta inválida'}. Detalhes: ${errorText.substring(0, 200)}...`);
+                if (response.status === 401) {
+                    throw new Error(`Não autorizado (401). Verifique se sua chave de API está configurada corretamente.`);
+                } else {
+                    throw new Error(`Erro na API de geração de imagem: ${response.statusText || 'Resposta inválida'}. Detalhes: ${errorText.substring(0, 200)}...`);
+                }
             }
 
             // Tenta analisar o JSON
@@ -131,11 +163,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Gerar personagem aleatório ao carregar a página
-    generateCharacter("aura poderosa, pose dinâmica");
+    // Gerar personagem aleatório ao carregar a página se a API_KEY estiver disponível
+    if (API_KEY || !window.location.hostname.includes('github.io')) {
+        generateCharacter("aura poderosa, pose dinâmica");
+    } else {
+        // Se API_KEY está vazia e está no GitHub Pages, exibe o aviso
+        showError("Gerador desabilitado: Chave de API não configurada para este ambiente.");
+    }
 
     // Event listener para o botão de gerar personagem aleatório
     generateRandomButton.addEventListener('click', () => {
+        if (!API_KEY && window.location.hostname.includes('github.io')) {
+            showError("Gerador desabilitado: Chave de API não configurada.");
+            return;
+        }
         lastImageDescription = null; // Limpa a descrição armazenada
         regenerateFromUploadButton.style.display = 'none'; // Oculta o botão de regenerar
         imageUpload.value = ''; // Limpa o valor do input de arquivo
@@ -144,6 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event listener para o upload de imagem
     imageUpload.addEventListener('change', async (event) => {
+        if (!API_KEY && window.location.hostname.includes('github.io')) {
+            showError("Gerador desabilitado: Chave de API não configurada.");
+            return;
+        }
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -172,6 +217,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event listener para o novo botão "Gerar Novamente (Baseado na Imagem Enviada)"
     regenerateFromUploadButton.addEventListener('click', async () => {
+        if (!API_KEY && window.location.hostname.includes('github.io')) {
+            showError("Gerador desabilitado: Chave de API não configurada.");
+            return;
+        }
         if (lastImageDescription) {
             await generateCharacter(lastImageDescription);
         } else {

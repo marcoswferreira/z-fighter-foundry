@@ -27,6 +27,17 @@ h1 {
     margin-bottom: 25px;
 }
 
+.logo {
+    margin-bottom: 20px;
+}
+
+.logo img {
+    max-width: 550px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
 .image-display {
     min-height: 300px;
     /* Garante espaço para a imagem ou carregamento */
@@ -96,8 +107,13 @@ h1 {
     width: 100%;
 }
 
-.button:hover {
+.button:hover:not(:disabled) {
     background-color: #2563eb;
+}
+
+.button:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
 }
 
 .upload-button {
@@ -114,8 +130,13 @@ h1 {
     text-align: center;
 }
 
-.upload-button:hover {
+.upload-button:hover:not(:disabled) {
     background-color: #059669;
+}
+
+.upload-button:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
 }
 
 .file-input {
@@ -127,4 +148,15 @@ h1 {
     color: #ef4444;
     margin-top: 15px;
     font-size: 1rem;
+}
+
+.warning-message {
+    color: #d97706;
+    /* Orange for warning */
+    background-color: #fffbeb;
+    border: 1px solid #fbd38d;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
 }
