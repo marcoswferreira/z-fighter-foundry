@@ -1,0 +1,130 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+.image-display {
+    min-height: 300px;
+    /* Garante espaço para a imagem ou carregamento */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.image-display img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: none;
+    /* Oculto por padrão */
+}
+
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #3b82f6;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.button {
+    padding: 12px 25px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.button:hover {
+    background-color: #2563eb;
+}
+
+.upload-button {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #10b981;
+    /* Green for upload */
+    color: white;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.upload-button:hover {
+    background-color: #059669;
+}
+
+.file-input {
+    display: none;
+    /* Hide the default file input */
+}
+
+.error-message {
+    color: #ef4444;
+    margin-top: 15px;
+    font-size: 1rem;
+}
