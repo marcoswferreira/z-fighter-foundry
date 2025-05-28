@@ -43,8 +43,8 @@ Para executar este projeto localmente, siga os passos abaixo:
 1. **Clone o Repositório** (se estiver em um, ou baixe os arquivos diretamente):
 
     ```bash
-    git clone <URL_DO_SEU_REPOSITORIO>
-    cd <NOME_DA_PASTA_DO_PROJETO>
+    git clone https://github.com/marcoswferreira/z-fighter-foundry
+    cd z-fighter-foundry
     ```
 
 2. **Organize os Arquivos**: Certifique-se de que `index.html`, `style.css` e `script.js` estejam na mesma pasta raiz do projeto.
